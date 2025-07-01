@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Student Success Predictor</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.2.0/dist/tf.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      max-width: 500px;
+    }
+    label, input {
+      display: block;
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎓 Student Success Predictor</h2>
+
+  <label>GPA (0–10):</label>
+  <input type="number" id="gpa" step="0.1" min="0" max="10">
+
+  <label>Participation (0–100):</label>
+  <input type="number" id="participation" min="0" max="100">
+
+  <label>Attendance (%) :</label>
+  <input type="number" id="attendance" min="0" max="100">
+
+  <label>Skills Score (0–100):</label>
+  <input type="number" id="skills" min="0" max="100">
+
+  <button onclick="predict()">Predict Success</button>
+
+  <h3 id="output">Result: </h3>
+
+  <script>
+    // Dummy trained weights for demonstration (assume logistic regression)
+    const weights = [0.8, 0.02, 0.03, 0.04]; // GPA, Participation, Attendance, Skills
+    const bias = -5;
+
+    function sigmoid(x) {
+      return 1 / (1 + Math.exp(-x));
+    }
+
+    function predict() {
+      const gpa = parseFloat(document.getElementById("gpa").value) || 0;
+      const participation = parseFloat(document.getElementById("participation").value) || 0;
+      const attendance = parseFloat(document.getElementById("attendance").value) || 0;
+      const skills = parseFloat(document.getElementById("skills").value) || 0;
+
+      // Normalize values (very basic)
+      const features = [gpa / 10, participation / 100, attendance / 100, skills / 100];
+
+      // Weighted sum
+      let result = bias;
+      for (let i = 0; i < weights.length; i++) {
+        result += features[i] * weights[i];
+      }
+
+      const probability = sigmoid(result);
+      const prediction = probability > 0.5 ? "Likely to Succeed 🎯" : "Unlikely to Succeed 🚫";
+
+      document.getElementById("output").innerText = `Result: ${prediction} (Confidence: ${(probability*100).toFixed(1)}%)`;
+    }
+  </script>
+
+</body>
+</html>
